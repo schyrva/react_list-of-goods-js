@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import cn from 'classnames';
 import 'bulma/css/bulma.css';
 import './App.scss';
 
@@ -15,19 +16,22 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+const SORT_BY_ALPHABET = 'alphabet';
+const SORT_BY_LENGTH = 'length';
+
 export const App = () => {
   const [goods, setGoods] = useState([...goodsFromServer]);
   const [sortOrder, setSortOrder] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const applySort = sortType => {
+  const applySort = (sortType) => {
     let sortedGoods = [...goodsFromServer];
 
     switch (sortType) {
-      case 'alphabetical':
+      case SORT_BY_ALPHABET:
         sortedGoods.sort((a, b) => a.localeCompare(b));
         break;
-      case 'length':
+      case SORT_BY_LENGTH:
         sortedGoods.sort((a, b) => a.length - b.length);
         break;
       default:
@@ -60,21 +64,21 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortOrder === 'alphabetical' ? '' : 'is-light'}`}
-          onClick={() => applySort('alphabetical')}
+          className={cn('button is-info', { 'is-light': sortOrder !== SORT_BY_ALPHABET })}
+          onClick={() => applySort(SORT_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
         <button
           type="button"
-          className={`button is-success ${sortOrder === 'length' ? '' : 'is-light'}`}
-          onClick={() => applySort('length')}
+          className={cn('button is-success', { 'is-light': sortOrder !== SORT_BY_LENGTH })}
+          onClick={() => applySort(SORT_BY_LENGTH)}
         >
           Sort by length
         </button>
         <button
           type="button"
-          className={`button is-warning ${isReversed ? '' : 'is-light'}`}
+          className={cn('button is-warning', { 'is-light': !isReversed })}
           onClick={handleReverse}
         >
           Reverse
@@ -91,9 +95,7 @@ export const App = () => {
       </div>
       <ul>
         {goods.map(good => (
-          <li key={good} data-cy="Good">
-            {good}
-          </li>
+          <li key={good} data-cy="Good">{good}</li>
         ))}
       </ul>
     </div>
