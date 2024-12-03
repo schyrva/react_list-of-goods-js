@@ -24,25 +24,16 @@ export const App = () => {
   const [sortOrder, setSortOrder] = useState('');
   const [isReversed, setIsReversed] = useState(false);
 
-  const applySort = (sortType) => {
-    let sortedGoods = [...goodsFromServer];
+  const applySort = sortType => {
+    const sortedGoods = [...goodsFromServer];
 
-    switch (sortType) {
-      case SORT_BY_ALPHABET:
-        sortedGoods.sort((a, b) => a.localeCompare(b));
-        break;
-      case SORT_BY_LENGTH:
-        sortedGoods.sort((a, b) => a.length - b.length);
-        break;
-      default:
-        sortedGoods = [...goodsFromServer];
+    if (sortType === SORT_BY_ALPHABET) {
+      sortedGoods.sort((a, b) => a.localeCompare(b));
+    } else if (sortType === SORT_BY_LENGTH) {
+      sortedGoods.sort((a, b) => a.length - b.length);
     }
 
-    if (isReversed) {
-      sortedGoods.reverse();
-    }
-
-    setGoods(sortedGoods);
+    setGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
     setSortOrder(sortType);
   };
 
@@ -64,14 +55,18 @@ export const App = () => {
       <div className="buttons">
         <button
           type="button"
-          className={cn('button is-info', { 'is-light': sortOrder !== SORT_BY_ALPHABET })}
+          className={cn('button is-info', {
+            'is-light': sortOrder !== SORT_BY_ALPHABET,
+          })}
           onClick={() => applySort(SORT_BY_ALPHABET)}
         >
           Sort alphabetically
         </button>
         <button
           type="button"
-          className={cn('button is-success', { 'is-light': sortOrder !== SORT_BY_LENGTH })}
+          className={cn('button is-success', {
+            'is-light': sortOrder !== SORT_BY_LENGTH,
+          })}
           onClick={() => applySort(SORT_BY_LENGTH)}
         >
           Sort by length
@@ -95,7 +90,9 @@ export const App = () => {
       </div>
       <ul>
         {goods.map(good => (
-          <li key={good} data-cy="Good">{good}</li>
+          <li key={good} data-cy="Good">
+            {good}
+          </li>
         ))}
       </ul>
     </div>
